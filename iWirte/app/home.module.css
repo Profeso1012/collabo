@@ -326,10 +326,16 @@
 
 /* Newsletter Section - Google Banner Pattern */
 .newsletterSection {
-  background: var(--maroon);
+  background: linear-gradient(135deg, var(--maroon) 0%, #A0002F 100%);
   color: white;
-  padding: 60px 0;
+  padding: 80px 0;
   text-align: center;
+}
+
+@media only screen and (max-width: 599px) {
+  .newsletterSection {
+    padding: 60px 0;
+  }
 }
 
 .newsletterContent {
@@ -351,6 +357,17 @@
   opacity: 0.95;
 }
 
+.successMessage {
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid rgba(76, 175, 80, 0.6);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+  animation: fade-in-upward 0.3s ease-out;
+}
+
 .newsletterForm {
   display: flex;
   gap: 8px;
@@ -365,10 +382,16 @@
   border-radius: 6px;
   font-size: 1rem;
   font-family: inherit;
+  color: #333;
 }
 
 .newsletterForm input::placeholder {
   color: #999;
+}
+
+.newsletterForm input:disabled {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
 }
 
 .subscribeBtn {
@@ -381,12 +404,18 @@
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: inherit;
+  font-size: 1rem;
 }
 
-.subscribeBtn:hover {
+.subscribeBtn:hover:not(:disabled) {
   background: #FFC700;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.subscribeBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 @media only screen and (max-width: 599px) {
