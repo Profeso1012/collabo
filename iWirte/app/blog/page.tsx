@@ -107,7 +107,8 @@ export default function BlogPage() {
                     <h2>{post.title}</h2>
                   </Link>
                   <p className={styles.meta}>
-                    {new Date(post.created_at).toLocaleDateString()} • By {post.author}
+                    {new Date(post.created_at).toLocaleDateString()} • By Seyi
+                    {/*post.author*/}
                   </p>
                   <p className={styles.excerpt}>{post.excerpt}</p>
                   <Link href={`/blog/${post.slug}`} className={styles.readMore}>
