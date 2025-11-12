@@ -41,23 +41,52 @@ export default function EditorComponent() {
     setShowEmojiPicker(false);
   };
 
-  const handleImageResize = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageResize = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new Image();
-        img.onload = () => {
-          // Store image with metadata for resizing
-          const editor = editorRef.current?.getEditor();
-          if (editor) {
-            const selection = editor.getSelection();
-            editor.insertEmbed(selection?.index || 0, 'image', reader.result as string);
-          }
-        };
-        img.src = reader.result as string;
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    try {
+      // Show loading state
+      const uploadingText = 'Uploading image...';
+      const editor = editorRef.current?.getEditor();
+      if (editor) {
+        const selection = editor.getSelection();
+        editor.insertText(selection?.index || 0, uploadingText);
+      }
+
+      // Upload to server
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        alert(`Upload failed: ${error.error || 'Unknown error'}`);
+        // Remove loading text
+        if (editor) {
+          const index = editor.getSelection()?.index || 0;
+          editor.deleteText(Math.max(0, index - uploadingText.length), uploadingText.length);
+        }
+        return;
+      }
+
+      const { url } = await response.json();
+
+      if (editor) {
+        const selection = editor.getSelection();
+        const index = selection?.index || 0;
+        // Remove loading text
+        editor.deleteText(Math.max(0, index - uploadingText.length), uploadingText.length);
+        // Insert image
+        editor.insertEmbed(index - uploadingText.length, 'image', url);
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Failed to upload image');
     }
   };
 
