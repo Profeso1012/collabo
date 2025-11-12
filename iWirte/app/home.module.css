@@ -45,26 +45,26 @@
 }
 
 .heroTitle {
-  font-size: 3rem;
+  font-size: 2.75rem;
   line-height: 3.25rem;
-  letter-spacing: -0.125rem;
+  letter-spacing: -0.15rem;
   font-weight: 700;
   color: var(--maroon);
 }
 
 @media only screen and (min-width: 600px) {
   .heroTitle {
-    font-size: 4rem;
-    line-height: 4.5rem;
-    letter-spacing: -0.15625rem;
+    font-size: 3.5rem;
+    line-height: 4.25rem;
+    letter-spacing: -0.2rem;
   }
 }
 
 @media only screen and (min-width: 1024px) {
   .heroTitle {
-    font-size: 4.5rem;
-    line-height: 5.25rem;
-    letter-spacing: -0.21875rem;
+    font-size: 4rem;
+    line-height: 4.75rem;
+    letter-spacing: -0.2rem;
   }
 }
 
