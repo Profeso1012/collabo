@@ -147,6 +147,67 @@
   object-fit: cover;
 }
 
+/* Why Section */
+.whySection {
+  background: white;
+  padding: var(--spacer-07) 0;
+  border-top: 1px solid var(--border);
+}
+
+@media only screen and (min-width: 1024px) {
+  .whySection {
+    padding: var(--spacer-08) 0;
+  }
+}
+
+.whyGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 32px;
+  margin-bottom: 40px;
+}
+
+@media only screen and (max-width: 599px) {
+  .whyGrid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+.whyCard {
+  padding: 32px 24px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.whyCard:hover {
+  border-color: var(--maroon);
+  box-shadow: 0 4px 12px rgba(139, 58, 58, 0.1);
+  transform: translateY(-4px);
+}
+
+.whyIcon {
+  font-size: 32px;
+  color: var(--maroon);
+  margin-bottom: 16px;
+}
+
+.whyCard h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--dark-text);
+  margin-bottom: 12px;
+}
+
+.whyCard p {
+  font-size: 0.975rem;
+  color: var(--light-text);
+  line-height: 1.6;
+}
+
 /* Services Section */
 .servicesSection {
   background: linear-gradient(180deg, white, var(--off-white));
