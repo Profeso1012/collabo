@@ -1,12 +1,12 @@
 .blogPage {
   min-height: 100vh;
-  background: var(--off-white);
+  background: white;
 }
 
 .blogHeader {
-  background: linear-gradient(135deg, var(--maroon), #6B2A2A);
+  background: linear-gradient(135deg, var(--maroon) 0%, #A0002F 100%);
   color: white;
-  padding: 60px 0;
+  padding: 100px 0 60px;
   text-align: center;
 }
 
