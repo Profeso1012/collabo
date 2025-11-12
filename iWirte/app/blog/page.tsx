@@ -26,7 +26,7 @@ export default function BlogPage() {
     const fetchPosts = async () => {
       try {
         const { data, error } = await supabase
-          .from('blogs')
+          .from('blog_posts')
           .select('id, title, slug, excerpt, created_at, author')
           .order('created_at', { ascending: false });
 
