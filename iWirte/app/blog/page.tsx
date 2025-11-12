@@ -27,7 +27,8 @@ export default function BlogPage() {
       try {
         const { data, error } = await supabase
           .from('blog_posts')
-          .select('id, title, slug, excerpt, created_at, author');
+          .select('id, title, slug, excerpt, created_at, author')
+          .order('created_at', { ascending: false });
 
         if (error) throw error;
         setPosts(data || []);
@@ -46,7 +47,6 @@ export default function BlogPage() {
     let filtered = posts;
 
     if (query) {
-      // ... (Your existing query filtering logic)
       filtered = filtered.filter(
         (post) =>
           post.title.toLowerCase().includes(query.toLowerCase()) ||
@@ -55,23 +55,9 @@ export default function BlogPage() {
     }
 
     if (dateFilter) {
-      const now = new Date();
-      let cutoffDate = new Date(now);
-
-      // Calculate the cutoff date based on the filter string
-      if (dateFilter === 'week') {
-        cutoffDate.setDate(now.getDate() - 7);
-      } else if (dateFilter === 'month') {
-        cutoffDate.setMonth(now.getMonth() - 1);
-      } else if (dateFilter === 'year') {
-        cutoffDate.setFullYear(now.getFullYear() - 1);
-      }
-
-      // Filter posts created AFTER the cutoff date
-      filtered = filtered.filter((post) => {
-        const postDate = new Date(post.created_at);
-        return postDate >= cutoffDate; // Only keep posts newer than the cutoff
-      });
+      filtered = filtered.filter((post) =>
+        post.created_at.startsWith(dateFilter)
+      );
     }
 
     setFilteredPosts(filtered);
@@ -97,7 +83,7 @@ export default function BlogPage() {
 
   return (
     <>
-      {/*<Navbar />*/}
+    {/*<Navbar />*/}
       <main className={styles.blogPage}>
         <section className={styles.blogHeader}>
           <div className={styles.container}>
