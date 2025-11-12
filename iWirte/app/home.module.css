@@ -4,7 +4,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 48px;
   align-items: center;
-  padding: 80px 0;
+  padding: 100px 0 80px;
   max-width: 1440px;
   margin: 0 auto;
   padding-left: 24px;
@@ -13,15 +13,13 @@
 
 @media only screen and (min-width: 600px) {
   .hero {
-    padding-left: 40px;
-    padding-right: 40px;
+    padding: 120px 40px 80px;
   }
 }
 
 @media only screen and (min-width: 1024px) {
   .hero {
-    padding-left: 72px;
-    padding-right: 72px;
+    padding: 140px 72px 100px;
   }
 }
 
@@ -29,13 +27,13 @@
   .hero {
     grid-template-columns: 1fr;
     gap: 32px;
-    padding: 60px 16px;
+    padding: 80px 16px;
   }
 }
 
 @media only screen and (max-width: 599px) {
   .hero {
-    padding: 40px 12px;
+    padding: 60px 12px 40px;
   }
 }
 
