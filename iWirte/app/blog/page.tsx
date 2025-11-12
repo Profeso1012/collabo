@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import BlogSearch from '@/components/BlogSearch';
 import { supabase } from '@/lib/supabase';
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import styles from './blog.module.css';
 
 interface BlogPost {
