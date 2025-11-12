@@ -22,7 +22,7 @@ export default function Navbar() {
     <header className={`${styles.navbar} ${isScrolled ? styles.scrolled : ''}`}>
       <div className={styles.container}>
         <div className={styles.logo}>
-          <Image src="/../../image.png" alt="iWrite" width={32} height={32} priority />
+          <Image src="/image.png" alt="iWrite" width={32} height={32} priority />
           <span>iWrite</span>
         </div>
 
