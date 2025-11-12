@@ -83,7 +83,7 @@ export default function BlogPage() {
 
   return (
     <>
-    {/*<Navbar />*/}
+    <Navbar />
       <main className={styles.blogPage}>
         <section className={styles.blogHeader}>
           <div className={styles.container}>
@@ -146,7 +146,7 @@ export default function BlogPage() {
           </div>
         </section>
       </main>
-      {/*<Footer />*/}
+      <Footer />
     </>
   );
 }
