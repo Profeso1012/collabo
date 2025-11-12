@@ -21,6 +21,8 @@ export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -64,6 +66,24 @@ export default function BlogPage() {
     setFilteredPosts(filtered);
   };
 
+  const handleNewsletterSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (response.ok) {
+        setEmail('');
+        setSubscribed(true);
+        setTimeout(() => setSubscribed(false), 5000);
+      }
+    } catch (error) {
+      console.error('Subscription error:', error);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -101,6 +121,32 @@ export default function BlogPage() {
             </div>
           )}
         </div>
+
+        {/* Newsletter Section */}
+        <section className={styles.newsletterSection}>
+          <div className={styles.newsletterContent}>
+            <h2>Never Miss a Post</h2>
+            <p>Subscribe to get new articles delivered to your inbox</p>
+            {subscribed && (
+              <div className={styles.successMessage}>
+                ✓ Successfully subscribed! Check your email for confirmation.
+              </div>
+            )}
+            <form className={styles.newsletterForm} onSubmit={handleNewsletterSignup}>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                disabled={subscribed}
+              />
+              <button type="submit" className={styles.subscribeBtn} disabled={subscribed}>
+                {subscribed ? 'Subscribed!' : 'Subscribe'}
+              </button>
+            </form>
+          </div>
+        </section>
       </main>
       <Footer />
     </>
