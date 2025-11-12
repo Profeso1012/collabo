@@ -3,7 +3,10 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { format } from 'date-fns';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import AdminLogout from '@/components/AdminLogout';
+import styles from './admin.module.css';
 
 type Blog = {
   id: string;
@@ -12,6 +15,7 @@ type Blog = {
   published_at: string;
   likes: number;
   loves: number;
+  dislikes: number;
 };
 
 export default function AdminDashboard() {
@@ -53,80 +57,73 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-maroon">Admin Dashboard</h1>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/admin/editor"
-              className="bg-maroon text-white px-6 py-3 rounded-lg font-semibold hover:bg-maroon-light transition-all"
-            >
-              Create New Post
+    <>
+      <Navbar />
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Admin Dashboard</h1>
+          <div className={styles.actions}>
+            <Link href="/admin/editor" className={styles.createButton}>
+              ✎ Create New Post
             </Link>
             <AdminLogout />
           </div>
         </div>
 
         {loading ? (
-          <div className="text-center py-20">
-            <p className="text-xl text-gray-600">Loading...</p>
-          </div>
+          <div className={styles.loading}>Loading blog posts...</div>
         ) : blogs.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-xl text-gray-600">No blog posts yet.</p>
+          <div className={styles.noBlogsMessage}>
+            <p>No blog posts yet. Create your first post to get started!</p>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Title</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Published</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Engagement</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {blogs.map((blog) => (
-                  <tr key={blog.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <Link href={`/blog/${blog.slug}`} className="text-maroon hover:underline font-medium">
-                        {blog.title}
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Published</th>
+                <th>Engagement</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {blogs.map((blog) => (
+                <tr key={blog.id}>
+                  <td>
+                    <Link href={`/blog/${blog.slug}`} className={styles.blogTitle}>
+                      {blog.title}
+                    </Link>
+                  </td>
+                  <td className={styles.publishDate}>
+                    {format(new Date(blog.published_at), 'MMM dd, yyyy')}
+                  </td>
+                  <td>
+                    <div className={styles.engagement}>
+                      <span>👍 {blog.likes}</span>
+                      <span>❤ {blog.loves}</span>
+                      <span>👎 {blog.dislikes}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div className={styles.actionButtons}>
+                      <Link href={`/admin/editor/${blog.id}`} className={styles.editButton}>
+                        Edit
                       </Link>
-                    </td>
-                    <td className="px-6 py-4 text-gray-600">
-                      {format(new Date(blog.published_at), 'MMM dd, yyyy')}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex gap-4 text-sm text-gray-600">
-                        <span>{blog.likes} likes</span>
-                        <span>{blog.loves} loves</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex justify-end gap-2">
-                        <Link
-                          href={`/admin/editor/${blog.id}`}
-                          className="text-blue-600 hover:text-blue-800 font-medium"
-                        >
-                          Edit
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(blog.id)}
-                          className="text-red-600 hover:text-red-800 font-medium"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                      <button
+                        onClick={() => handleDelete(blog.id)}
+                        className={styles.deleteButton}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
-    </div>
+      <Footer />
+    </>
   );
 }
