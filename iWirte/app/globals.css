@@ -1,0 +1,224 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Normalize + Google's Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* iWrite Theme Colors */
+  --maroon: #8B3A3A;
+  --light-blue: #A8D8EA;
+  --off-white: #F5F5F0;
+  --gold: #D4AF37;
+  --dark-text: #202124;
+  --light-text: #5f6368;
+  --border: #dadce0;
+  --shadow-1: 0 1px 2px rgba(32,33,36,.15), 0 1px 8px rgba(32,33,36,.08);
+  --shadow-2: 0 4px 15px 0 rgba(32,33,36,.05);
+  --shadow-3: 0 8px 20px 0 rgba(32,33,36,.1);
+}
+
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  word-break: break-word;
+  word-wrap: break-word;
+  font-family: "Google Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: white;
+  color: var(--dark-text);
+  overflow-x: hidden;
+}
+
+/* Google's Animation Keyframes */
+@keyframes fade-in-upward {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(240px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-up {
+  from {
+    height: 0;
+    width: 0;
+  }
+  to {
+    height: 100%;
+    width: 100%;
+    visibility: visible;
+  }
+}
+
+/* Responsive Spacing System (Google's --spacer variables) */
+:root {
+  --spacer-01: 8px;
+  --spacer-02: 16px;
+  --spacer-03: 24px;
+  --spacer-04: 32px;
+  --spacer-05: 24px;
+  --spacer-06: 40px;
+  --spacer-07: 64px;
+  --spacer-08: 80px;
+  --spacer-09: 120px;
+}
+
+@media only screen and (min-width: 1024px) {
+  :root {
+    --spacer-05: 40px;
+    --spacer-06: 64px;
+    --spacer-07: 80px;
+    --spacer-08: 120px;
+    --spacer-09: 160px;
+  }
+}
+
+/* Grid System (Google's 12-column grid) */
+.chr-grid-default-parent {
+  margin: auto;
+  max-width: 1440px;
+  padding: 0 28px;
+}
+
+@media only screen and (min-width: 600px) {
+  .chr-grid-default-parent {
+    padding: 0 40px;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .chr-grid-default-parent {
+    padding: 0 72px;
+  }
+}
+
+@media only screen and (min-width: 1440px) {
+  .chr-grid-default-parent {
+    padding: 0 74px;
+  }
+}
+
+.chr-grid-default {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: 28px;
+}
+
+@media only screen and (min-width: 600px) {
+  .chr-grid-default {
+    grid-template-columns: repeat(12, 1fr);
+    grid-column-gap: 40px;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .chr-grid-default {
+    grid-column-gap: 48px;
+  }
+}
+
+@media only screen and (min-width: 1440px) {
+  .chr-grid-default {
+    grid-column-gap: 64px;
+  }
+}
+
+/* Typography System (Google's headline sizes) */
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+}
+
+.chr-headline-0 {
+  font-size: 3rem;
+  line-height: 3.25rem;
+  letter-spacing: -0.125rem;
+  font-weight: 700;
+}
+
+@media only screen and (min-width: 600px) {
+  .chr-headline-0 {
+    font-size: 4rem;
+    line-height: 4.5rem;
+    letter-spacing: -0.15625rem;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .chr-headline-0 {
+    font-size: 4.5rem;
+    line-height: 5.25rem;
+    letter-spacing: -0.21875rem;
+  }
+}
+
+.chr-headline-1 {
+  font-size: 2.5rem;
+  line-height: 3rem;
+  letter-spacing: -0.09375rem;
+  font-weight: 700;
+}
+
+@media only screen and (min-width: 600px) {
+  .chr-headline-1 {
+    font-size: 3rem;
+    line-height: 3.5rem;
+    letter-spacing: -0.078125rem;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .chr-headline-1 {
+    font-size: 3.75rem;
+    line-height: 4.5rem;
+    letter-spacing: -0.078125rem;
+  }
+}
+
+.chr-headline-2 {
+  font-size: 2.25rem;
+  line-height: 2.75rem;
+  letter-spacing: -0.046875rem;
+  font-weight: 700;
+}
+
+@media only screen and

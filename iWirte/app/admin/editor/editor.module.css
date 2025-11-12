@@ -1,0 +1,123 @@
+.editor {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.titleInput {
+  width: 100%;
+  font-size: 32px;
+  font-weight: 700;
+  padding: 16px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  color: var(--maroon);
+  background: var(--off-white);
+  transition: border-color 0.3s ease;
+}
+
+.titleInput:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: white;
+}
+
+.toolbarExtras {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.emojiBtn,
+.imageLabel {
+  padding: 8px 16px;
+  background: var(--off-white);
+  border: 1px solid rgba(139, 58, 58, 0.2);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.emojiBtn:hover,
+.imageLabel:hover {
+  background: var(--light-blue);
+  border-color: var(--gold);
+}
+
+.imageLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.emojiPickerContainer {
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 100;
+}
+
+.quill {
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  min-height: 500px;
+}
+
+.quill :global(.ql-toolbar) {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-color: rgba(139, 58, 58, 0.2);
+  background: var(--off-white);
+}
+
+.quill :global(.ql-container) {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border-color: rgba(139, 58, 58, 0.2);
+  font-size: 16px;
+}
+
+.quill :global(.ql-editor) {
+  min-height: 400px;
+  padding: 24px;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+}
+
+.publishBtn {
+  flex: 1;
+  padding: 14px 28px;
+  background: var(--maroon);
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.publishBtn:hover {
+  background: #6B2A2A;
+  box-shadow: 0 8px 20px rgba(139, 58, 58, 0.2);
+}
+
+@media (max-width: 600px) {
+  .editor {
+    padding: 24px 12px;
+  }
+
+  .titleInput {
+    font-size: 24px;
+  }
+
+  .quill :global(.ql-editor) {
+    min-height: 300px;
+    padding: 16px;
+  }
+}
