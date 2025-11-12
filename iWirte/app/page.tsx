@@ -9,12 +9,14 @@ import styles from './home.module.css';
 
 export default function Home() {
   const [email, setEmail] = useState('');
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 500);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('subscribed') === 'true') {
+      setSubscribed(true);
+      setTimeout(() => setSubscribed(false), 5000);
+    }
   }, []);
 
   const handleNewsletterSignup = async (e: React.FormEvent) => {
@@ -26,8 +28,9 @@ export default function Home() {
         body: JSON.stringify({ email }),
       });
       if (response.ok) {
-        alert('Subscribed successfully!');
         setEmail('');
+        setSubscribed(true);
+        setTimeout(() => setSubscribed(false), 5000);
       }
     } catch (error) {
       console.error('Subscription error:', error);
@@ -37,29 +40,65 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <main style={{ paddingTop: '64px' }}>
-        {/* Hero Section - Google Chrome Pattern */}
+      <main style={{ paddingTop: '0' }}>
+        {/* Hero Section with Video Embed */}
         <section className={styles.hero}>
           <div className={styles.heroContent}>
             <h1 className={styles.heroTitle}>
               Getting information doesn't have to be boring
             </h1>
             <p className={styles.heroSubtitle}>
-              Professional writing services that make learning engaging. From thesis work to copywriting,
-              we create content that informs, inspires, and captivates.
+              At iWrite, we believe learning should be engaging, fun, and professionally crafted.
+              From academic thesis to creative fiction, copywriting to compelling synopsis—we make
+              every word count. Professional writing with a human touch.
             </p>
             <div className={styles.ctaButtons}>
-              <button className={`${styles.button} ${styles.buttonPrimary}`}>
+              <Link href="/services" className={`${styles.button} ${styles.buttonPrimary}`}>
                 Explore Services
-              </button>
-              <button className={`${styles.button} ${styles.buttonSecondary}`}>
-                Learn More
-              </button>
+              </Link>
+              <Link href="/contact" className={`${styles.button} ${styles.buttonSecondary}`}>
+                Get Started
+              </Link>
             </div>
           </div>
           <div className={styles.heroImage}>
-            <div className={styles.imagePlaceholder} style={{ background: 'linear-gradient(135deg, #A8D8EA, #F5F5F0)' }}>
-              <img src="https://picsum.photos/500/400?random=1" alt="iWrite Services" />
+            <div className={styles.imagePlaceholder}>
+              <iframe
+                src="https://giphy.com/embed/26uf6EAcWDkNkyCVa"
+                width="100%"
+                height="100%"
+                style={{ border: 'none', borderRadius: '12px' }}
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Why Choose iWrite Section */}
+        <section className={styles.whySection}>
+          <div className="chr-grid-default-parent">
+            <h2 className={styles.sectionTitle}>Why Choose iWrite?</h2>
+            <div className={styles.whyGrid}>
+              <div className={styles.whyCard}>
+                <div className={styles.whyIcon}>✦</div>
+                <h3>Professional Quality</h3>
+                <p>Every piece is crafted by experienced writers who understand your needs</p>
+              </div>
+              <div className={styles.whyCard}>
+                <div className={styles.whyIcon}>✓</div>
+                <h3>Engaging Content</h3>
+                <p>We make learning fun while maintaining professional and formal standards</p>
+              </div>
+              <div className={styles.whyCard}>
+                <div className={styles.whyIcon}>◆</div>
+                <h3>Timely Delivery</h3>
+                <p>Your deadline is our priority. We deliver on time, every time</p>
+              </div>
+              <div className={styles.whyCard}>
+                <div className={styles.whyIcon}>★</div>
+                <h3>100% Original</h3>
+                <p>Unique, plagiarism-free content tailored specifically to your requirements</p>
+              </div>
             </div>
           </div>
         </section>
@@ -68,36 +107,49 @@ export default function Home() {
         <section className={styles.servicesSection}>
           <div className="chr-grid-default-parent">
             <h2 className={styles.sectionTitle}>Our Services</h2>
+            <p className={styles.sectionDescription}>
+              Comprehensive writing solutions for every need
+            </p>
             <div className={styles.servicesGrid}>
-              {/*
-                { title: 'Thesis & Projects', desc: 'Expertly crafted academic writing' },
-                { title: 'Copywriting', desc: 'Compelling marketing content' },
-                { title: 'Synopsis Writing', desc: 'Concise topic summaries' },
-                { title: 'Fiction Writing', desc: 'Original creative stories' }
-              */}
-              {Array(4)
-                .fill(0)
-                .map((_, i) => (
-                  <div key={i} className="chr-card-adaptive">
-                    <div className={styles.serviceIcon} style={{ background: `hsl(${(i * 90) % 360}, 70%, 85%)` }} />
-                    <div className="chr-card-adaptive__content-wrapper">
-                      <h3 className={styles.serviceTitle}>Service Title</h3>
-                      <p className="chr-copy">Service description goes here.</p>
-                    </div>
-                  </div>
-                ))}
+              <div className={styles.serviceCard}>
+                <div className={styles.serviceIcon} style={{ background: 'linear-gradient(135deg, #A8D8EA 0%, #87CEEB 100%)' }} />
+                <h3 className={styles.serviceTitle}>Academic Writing</h3>
+                <p className={styles.serviceDesc}>Thesis, dissertations & research papers</p>
+              </div>
+              <div className={styles.serviceCard}>
+                <div className={styles.serviceIcon} style={{ background: 'linear-gradient(135deg, #D4AF37 0%, #FFD700 100%)' }} />
+                <h3 className={styles.serviceTitle}>Copywriting</h3>
+                <p className={styles.serviceDesc}>Marketing & web content that converts</p>
+              </div>
+              <div className={styles.serviceCard}>
+                <div className={styles.serviceIcon} style={{ background: 'linear-gradient(135deg, #8B3A3A 0%, #A0002F 100%)' }} />
+                <h3 className={styles.serviceTitle}>Synopsis Writing</h3>
+                <p className={styles.serviceDesc}>Concise summaries for any topic</p>
+              </div>
+              <div className={styles.serviceCard}>
+                <div className={styles.serviceIcon} style={{ background: 'linear-gradient(135deg, #F5F5F0 0%, #DAA520 100%)' }} />
+                <h3 className={styles.serviceTitle}>Fiction Writing</h3>
+                <p className={styles.serviceDesc}>Creative stories with compelling narratives</p>
+              </div>
             </div>
-            <Link href="/services" className={styles.viewAllLink}>
-              View All Services →
-            </Link>
+            <div className={styles.viewAllLinkContainer}>
+              <Link href="/services" className={styles.viewAllLink}>
+                Explore All Services →
+              </Link>
+            </div>
           </div>
         </section>
 
         {/* Newsletter Section - Google Banner Pattern */}
         <section className={styles.newsletterSection}>
           <div className={styles.newsletterContent}>
-            <h2>Stay Updated</h2>
-            <p>Get notified when we publish new articles and insights</p>
+            <h2>Stay in the Loop</h2>
+            <p>Get insights, writing tips, and updates from the iWrite blog</p>
+            {subscribed && (
+              <div className={styles.successMessage}>
+                ✓ Successfully subscribed! Check your email for confirmation.
+              </div>
+            )}
             <form className={styles.newsletterForm} onSubmit={handleNewsletterSignup}>
               <input
                 type="email"
@@ -105,9 +157,10 @@ export default function Home() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                disabled={subscribed}
               />
-              <button type="submit" className={styles.subscribeBtn}>
-                Subscribe
+              <button type="submit" className={styles.subscribeBtn} disabled={subscribed}>
+                {subscribed ? 'Subscribed!' : 'Subscribe'}
               </button>
             </form>
           </div>
