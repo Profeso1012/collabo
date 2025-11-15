@@ -16,52 +16,18 @@ interface BlogPost {
   created_at: string;
 }
 
-const PLACEHOLDER_POSTS = [
-  {
-    id: '1',
-    title: 'Inner Peace',
-    slug: 'inner-peace',
-    excerpt: '',
-    featured_image: 'https://api.builder.io/api/v1/image/assets/TEMP/0d531b182086ae2884767e4c254239bf334be327?width=808',
-    created_at: '2025-11-01'
-  },
-  {
-    id: '2',
-    title: '',
-    slug: 'post-2',
-    excerpt: '',
-    featured_image: 'https://api.builder.io/api/v1/image/assets/TEMP/eb372cc3522a0eaa7cf66b405615f661669ca5cc?width=744',
-    created_at: 'No date'
-  },
-  {
-    id: '3',
-    title: '',
-    slug: 'post-3',
-    excerpt: '',
-    featured_image: 'https://api.builder.io/api/v1/image/assets/TEMP/18982a8b83a3ac25f63a7e624af2d92ce7c750ff?width=744',
-    created_at: 'No date'
-  },
-  {
-    id: '4',
-    title: '',
-    slug: 'post-4',
-    excerpt: '',
-    featured_image: 'https://api.builder.io/api/v1/image/assets/TEMP/445c0e1093a71bc686ef2ea9b9c8db156272baad?width=754',
-    created_at: 'No date'
-  },
-  {
-    id: '5',
-    title: '',
-    slug: 'post-5',
-    excerpt: '',
-    featured_image: 'https://api.builder.io/api/v1/image/assets/TEMP/cbddb60b9f52f3a9129ab1861cf1cf10fdea37a9?width=754',
-    created_at: 'No date'
-  }
+const PLACEHOLDER_IMAGES = [
+  'https://api.builder.io/api/v1/image/assets/TEMP/0d531b182086ae2884767e4c254239bf334be327?width=808',
+  'https://api.builder.io/api/v1/image/assets/TEMP/eb372cc3522a0eaa7cf66b405615f661669ca5cc?width=744',
+  'https://api.builder.io/api/v1/image/assets/TEMP/18982a8b83a3ac25f63a7e624af2d92ce7c750ff?width=744',
+  'https://api.builder.io/api/v1/image/assets/TEMP/445c0e1093a71bc686ef2ea9b9c8db156272baad?width=754',
+  'https://api.builder.io/api/v1/image/assets/TEMP/cbddb60b9f52f3a9129ab1861cf1cf10fdea37a9?width=754'
 ];
 
 export default function BlogHomePage() {
-  const [latestPosts, setLatestPosts] = useState<BlogPost[]>([]);
+  const [carouselPosts, setCarouselPosts] = useState<BlogPost[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   useEffect(() => {
     const fetchLatestPosts = async () => {
@@ -75,26 +41,84 @@ export default function BlogHomePage() {
 
         if (error) throw error;
         
-        if (data && data.length >= 5) {
-          setLatestPosts(data);
-        } else {
-          setLatestPosts(PLACEHOLDER_POSTS);
+        const posts: BlogPost[] = [];
+        
+        for (let i = 0; i < 5; i++) {
+          if (data && data[i]) {
+            posts.push(data[i]);
+          } else {
+            posts.push({
+              id: `placeholder-${i}`,
+              title: 'Empty',
+              slug: '#',
+              excerpt: '',
+              featured_image: PLACEHOLDER_IMAGES[i],
+              created_at: 'No date'
+            });
+          }
         }
+        
+        setCarouselPosts(posts);
       } catch (error) {
         console.error('Error fetching posts:', error);
-        setLatestPosts(PLACEHOLDER_POSTS);
+        const placeholderPosts = PLACEHOLDER_IMAGES.map((img, i) => ({
+          id: `placeholder-${i}`,
+          title: 'Empty',
+          slug: '#',
+          excerpt: '',
+          featured_image: img,
+          created_at: 'No date'
+        }));
+        setCarouselPosts(placeholderPosts);
       }
     };
 
     fetchLatestPosts();
   }, []);
 
+  useEffect(() => {
+    if (!isAutoPlaying || carouselPosts.length === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % carouselPosts.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, carouselPosts.length]);
+
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % latestPosts.length);
+    setIsAutoPlaying(false);
+    setCurrentSlide((prev) => (prev + 1) % carouselPosts.length);
   };
 
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + latestPosts.length) % latestPosts.length);
+  const goToSlide = (index: number) => {
+    setIsAutoPlaying(false);
+    setCurrentSlide(index);
+  };
+
+  const formatDate = (dateStr: string) => {
+    if (dateStr === 'No date') return 'No date';
+    try {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    } catch {
+      return 'No date';
+    }
+  };
+
+  const getVisiblePosts = () => {
+    const posts = [];
+    for (let i = 0; i < 3; i++) {
+      const index = (currentSlide + i) % carouselPosts.length;
+      posts.push({ ...carouselPosts[index], position: i });
+    }
+    return posts;
+  };
+
+  const truncateTitle = (title: string, maxLength: number = 12) => {
+    if (title === 'Empty') return title;
+    if (title.length <= maxLength) return title;
+    return title.substring(0, maxLength) + '...';
   };
 
   return (
@@ -165,52 +189,60 @@ export default function BlogHomePage() {
               </Link>
             </div>
 
-            <div className={styles.carouselContainer}>
-              <div className={styles.carousel} style={{ transform: `translateX(-${currentSlide * 33.33}%)` }}>
-                {latestPosts.map((post, index) => (
+            <div className={styles.carouselWrapper}>
+              <div className={styles.carouselContainer}>
+                {carouselPosts.length > 0 && getVisiblePosts().map((post, idx) => (
                   <div 
-                    key={post.id} 
-                    className={`${styles.carouselItem} ${index === currentSlide ? styles.active : ''}`}
+                    key={`${post.id}-${idx}`}
+                    className={`${styles.carouselSlide} ${idx === 0 ? styles.activeSlide : ''}`}
                   >
-                    <Link href={post.slug !== 'inner-peace' && post.title ? `/blog/${post.slug}` : '#'}>
+                    <div className={styles.carouselImageWrapper}>
                       <img 
-                        src={post.featured_image || 'https://picsum.photos/400/600'} 
-                        alt={post.title || 'Blog post'}
+                        src={post.featured_image || PLACEHOLDER_IMAGES[0]} 
+                        alt={post.title}
+                        className={styles.carouselImage}
                       />
-                      {index === currentSlide && post.title && (
+                      {idx === 0 && (
                         <div className={styles.carouselOverlay}>
-                          <div className={styles.carouselMeta}>
-                            <span>01</span>
-                            <div className={styles.metaDivider}></div>
-                            <span>{new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+                          <div className={styles.overlayContent}>
+                            <div className={styles.postMeta}>
+                              <span className={styles.postNumber}>
+                                {String((currentSlide + 1)).padStart(2, '0')}
+                              </span>
+                              <div className={styles.metaDivider}></div>
+                              <span className={styles.postDate}>{formatDate(post.created_at)}</span>
+                            </div>
+                            <h3 className={styles.postTitle}>
+                              {truncateTitle(post.title, 15)}
+                            </h3>
                           </div>
-                          <h3>{post.title}</h3>
-                          {post.slug !== 'inner-peace' && (
-                            <div className={styles.carouselArrow}>
+                          {post.slug !== '#' && (
+                            <Link href={`/blog/${post.slug}`} className={styles.readMoreArrow}>
                               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                                 <path d="M20.3906 12H2.91284M20.3906 12L14.5647 6M20.3906 12L14.5647 18" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                               </svg>
-                            </div>
+                            </Link>
                           )}
                         </div>
                       )}
-                    </Link>
+                    </div>
                   </div>
                 ))}
               </div>
 
               <div className={styles.carouselControls}>
-                <button onClick={prevSlide} className={styles.carouselPrev} aria-label="Previous">
+                <button onClick={nextSlide} className={styles.nextButton} aria-label="Next">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path d="M9 5L16 12L9 19" stroke="#B88E2F" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </button>
+                
                 <div className={styles.carouselIndicators}>
-                  {latestPosts.map((_, index) => (
+                  {carouselPosts.map((_, index) => (
                     <button
                       key={index}
                       className={`${styles.indicator} ${index === currentSlide ? styles.activeIndicator : ''}`}
-                      onClick={() => setCurrentSlide(index)}
+                      onClick={() => goToSlide(index)}
                       aria-label={`Go to slide ${index + 1}`}
                     />
                   ))}
