@@ -340,12 +340,12 @@ export default function EditorPage({ params }: { params: { id?: string[] } }) {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold mb-2" style={{ color: '#B88E2F' }}>
               Featured Image (Optional)
             </label>
             <div className="flex items-center gap-4">
-              <label className="flex-1 px-4 py-3 rounded-lg border border-gray-300 cursor-pointer hover:bg-gray-50 transition-all">
-                <span className="text-gray-600">
+              <label className="flex-1 px-4 py-3 rounded-lg border cursor-pointer transition-all" style={{ borderColor: '#B88E2F' }}>
+                <span className="font-semibold" style={{ color: '#B88E2F' }}>
                   {uploadingImage ? 'Uploading...' : 'Choose Image'}
                 </span>
                 <input
@@ -367,15 +367,15 @@ export default function EditorPage({ params }: { params: { id?: string[] } }) {
               )}
             </div>
             {featuredImage && (
-              <p className="text-xs text-gray-500 mt-2">Image uploaded successfully</p>
+              <p className="text-xs mt-2" style={{ color: '#B88E2F' }}>Image uploaded successfully</p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold mb-2" style={{ color: '#B88E2F' }}>
               Content
             </label>
-            <div className="rich-text-editor border border-gray-300 rounded-lg relative">
+            <div className="rich-text-editor border rounded-lg relative" style={{ borderColor: '#B88E2F' }}>
               <ReactQuill
                 ref={quillRef}
                 theme="snow"
@@ -385,7 +385,7 @@ export default function EditorPage({ params }: { params: { id?: string[] } }) {
                 placeholder="Write your blog post content here..."
               />
             </div>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm mt-2" style={{ color: '#B88E2F' }}>
               💡 Tip: Click on an image to select it, then drag the corner to resize
             </p>
           </div>
@@ -394,14 +394,20 @@ export default function EditorPage({ params }: { params: { id?: string[] } }) {
             <button
               onClick={() => handleSave(false)}
               disabled={saving}
-              className="flex-1 bg-gray-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-gray-700 transition-all disabled:opacity-50"
+              className="flex-1 text-white px-8 py-4 rounded-lg font-semibold transition-all disabled:opacity-50"
+              style={{ backgroundColor: '#888888' }}
+              onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+              onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
             >
               {saving ? 'Saving...' : 'Save Draft'}
             </button>
             <button
               onClick={() => handleSave(true)}
               disabled={saving}
-              className="flex-1 bg-maroon text-white px-8 py-4 rounded-lg font-semibold hover:bg-maroon-light transition-all disabled:opacity-50"
+              className="flex-1 text-white px-8 py-4 rounded-lg font-semibold transition-all disabled:opacity-50"
+              style={{ backgroundColor: '#B88E2F' }}
+              onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+              onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
             >
               {saving ? 'Publishing...' : 'Publish'}
             </button>
