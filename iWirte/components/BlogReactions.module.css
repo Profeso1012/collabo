@@ -1,0 +1,111 @@
+.reactionsContainer {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 32px 0;
+  border-top: 1px solid #dadce0;
+  border-bottom: 1px solid #dadce0;
+  margin: 48px 0;
+  flex-wrap: wrap;
+}
+
+.reactionButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  font-family: 'Poppins', -apple-system, sans-serif;
+}
+
+.reactionButton.active {
+  background: #B88E2F;
+  color: white;
+  box-shadow: 0 4px 12px rgba(184, 142, 47, 0.3);
+}
+
+.reactionButton.activeDislike {
+  background: #3A3A3A;
+  color: white;
+  box-shadow: 0 4px 12px rgba(58, 58, 58, 0.3);
+}
+
+.reactionButton.inactive {
+  background: #F9F1E7;
+  color: #3A3A3A;
+}
+
+.reactionButton.inactive:hover {
+  background: #f0e8da;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.reactionButton.active:hover {
+  background: #9a7628;
+  transform: translateY(-2px);
+}
+
+.reactionButton.activeDislike:hover {
+  background: #2a2a2a;
+  transform: translateY(-2px);
+}
+
+.reactionIcon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+}
+
+.reactionCount {
+  font-weight: 600;
+  font-size: 1rem;
+  min-width: 24px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .reactionsContainer {
+    gap: 16px;
+    padding: 24px 0;
+  }
+
+  .reactionButton {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+
+  .reactionIcon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .reactionCount {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .reactionsContainer {
+    gap: 12px;
+  }
+
+  .reactionButton {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+
+  .reactionIcon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .reactionCount {
+    font-size: 0.85rem;
+  }
+}
