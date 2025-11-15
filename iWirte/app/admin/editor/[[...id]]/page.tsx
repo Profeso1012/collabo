@@ -52,6 +52,35 @@ export default function EditorPage({ params }: { params: { id?: string[] } }) {
       .replace(/(^-|-$)/g, '');
   };
 
+  const handleFeaturedImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const { url } = await response.json();
+        setFeaturedImage(url);
+      } else {
+        const error = await response.json();
+        alert(`Upload failed: ${error.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   const handleTitleChange = (value: string) => {
     setTitle(value);
     if (!blogId) {
