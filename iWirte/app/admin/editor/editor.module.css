@@ -92,7 +92,7 @@
 .publishBtn {
   flex: 1;
   padding: 14px 28px;
-  background: var(--maroon);
+  background: #B88E2F;
   color: white;
   font-weight: 600;
   border: none;
@@ -103,8 +103,8 @@
 }
 
 .publishBtn:hover {
-  background: #6B2A2A;
-  box-shadow: 0 8px 20px rgba(139, 58, 58, 0.2);
+  background: #a57c25;
+  box-shadow: 0 8px 20px rgba(184, 142, 47, 0.2);
 }
 
 @media (max-width: 600px) {
