@@ -68,13 +68,13 @@
 
 .logoutButton {
   background: #f5f5f0;
-  color: var(--maroon);
-  border: 1px solid var(--border);
+  color: #B88E2F;
+  border: 1px solid #B88E2F;
 }
 
 .logoutButton:hover {
   background: white;
-  border-color: var(--maroon);
+  border-color: #B88E2F;
   transform: translateY(-2px);
 }
 
