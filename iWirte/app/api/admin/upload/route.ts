@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
 
     // Get public URL
     const { data: publicUrl } = supabaseAdmin.storage
-      .from('blog-images')
+      .from('pictures')
       .getPublicUrl(data.path);
 
     return NextResponse.json({
