@@ -32,6 +32,30 @@
   color: #B88E2F;
 }
 
+.socialIcons {
+  display: flex;
+  gap: 20px;
+  margin-top: 24px;
+  padding-top: 24px;
+}
+
+.socialIcons a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.socialIcons a:hover {
+  transform: translateY(-3px);
+  opacity: 0.8;
+}
+
+.socialIcons svg {
+  width: 24px;
+  height: 24px;
+}
+
 .links {
   display: flex;
   flex-direction: column;
