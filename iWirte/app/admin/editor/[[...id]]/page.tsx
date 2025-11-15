@@ -17,6 +17,7 @@ export default function EditorPage({ params }: { params: { id?: string[] } }) {
   const [featuredImage, setFeaturedImage] = useState('');
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const quillRef = useRef<any>(null);
 
   useEffect(() => {
