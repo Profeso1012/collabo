@@ -1,9 +1,9 @@
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase';
 import { format } from 'date-fns';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import BlogNavbar from '@/components/BlogNavbar';
+import BlogFooter from '@/components/BlogFooter';
 import BlogReactions from '@/components/BlogReactions';
 import BlogComments from '@/components/BlogComments';
 import WelcomeModal from '@/components/WelcomeModal';
@@ -12,6 +12,7 @@ import styles from './blog-post.module.css';
 export const revalidate = 60;
 
 async function getBlog(slug: string) {
+  const supabase = createClient();
   const { data, error } = await supabase
     .from('blogs')
     .select('*')
@@ -34,7 +35,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
   return (
     <>
-      <Navbar />
+      <BlogNavbar />
       <div className={styles.article}>
         <WelcomeModal blogId={blog.id} />
         <article className={styles.container}>
@@ -73,7 +74,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           </div>
         </section>
       </div>
-      <Footer />
+      <BlogFooter />
     </>
   );
 }
