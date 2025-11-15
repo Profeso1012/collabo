@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import BlogSearch from '@/components/BlogSearch';
-import { supabase } from '@/lib/supabase';
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { createClient } from '@/lib/supabase';
+import BlogNavbar from "@/components/BlogNavbar";
+import BlogFooter from "@/components/BlogFooter";
 import styles from './blog.module.css';
 
 interface BlogPost {
@@ -27,6 +27,7 @@ export default function BlogPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        const supabase = createClient();
         const { data, error } = await supabase
           .from('blogs')
           .select('id, title, slug, excerpt, created_at')
@@ -85,7 +86,7 @@ export default function BlogPage() {
 
   return (
     <>
-    <Navbar />
+    <BlogNavbar />
       <main className={styles.blogPage}>
         <section className={styles.blogHeader}>
           <div className={styles.container}>
@@ -148,7 +149,7 @@ export default function BlogPage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <BlogFooter />
     </>
   );
 }
