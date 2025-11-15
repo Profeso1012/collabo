@@ -84,6 +84,26 @@
   padding: 24px;
 }
 
+.quill :global(.ql-toolbar.ql-snow .ql-stroke) {
+  stroke: rgba(184, 142, 47, 0.5);
+}
+
+.quill :global(.ql-toolbar.ql-snow .ql-stroke.ql-active),
+.quill :global(.ql-toolbar.ql-snow .ql-stroke:hover) {
+  stroke: #B88E2F;
+}
+
+.quill :global(.ql-toolbar.ql-snow .ql-fill),
+.quill :global(.ql-toolbar.ql-snow .ql-picker-label) {
+  fill: rgba(184, 142, 47, 0.5);
+}
+
+.quill :global(.ql-toolbar.ql-snow .ql-fill.ql-active),
+.quill :global(.ql-toolbar.ql-snow .ql-fill:hover),
+.quill :global(.ql-toolbar.ql-snow .ql-picker-label:hover) {
+  fill: #B88E2F;
+}
+
 .actions {
   display: flex;
   gap: 12px;
