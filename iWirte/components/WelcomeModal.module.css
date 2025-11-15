@@ -1,0 +1,205 @@
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  position: relative;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 480px;
+  width: 100%;
+  padding: 48px;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modalContent {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.iconWrapper {
+  margin-bottom: 24px;
+  animation: wave 1s ease-in-out infinite;
+}
+
+@keyframes wave {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(20deg);
+  }
+  75% {
+    transform: rotate(-20deg);
+  }
+}
+
+.waveIcon {
+  width: 80px;
+  height: 80px;
+}
+
+.modalTitle {
+  font-family: 'Poppins', -apple-system, sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #B88E2F;
+  margin: 0 0 24px 0;
+}
+
+.modalText {
+  font-family: 'Poppins', -apple-system, sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: #3A3A3A;
+  margin: 0 0 24px 0;
+}
+
+.heartIcon,
+.commentIcon,
+.mailIcon {
+  font-size: 1.25rem;
+  display: inline-block;
+}
+
+.newsletterPrompt {
+  background: #F9F1E7;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 32px;
+  width: 100%;
+}
+
+.newsletterPrompt p {
+  font-family: 'Poppins', -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #3A3A3A;
+  margin: 0;
+}
+
+.continueButton {
+  width: 100%;
+  background: #B88E2F;
+  color: white;
+  padding: 16px 32px;
+  border-radius: 8px;
+  border: none;
+  font-family: 'Poppins', -apple-system, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 12px;
+}
+
+.continueButton:hover {
+  background: #9a7628;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(184, 142, 47, 0.3);
+}
+
+.dismissButton {
+  background: transparent;
+  border: none;
+  color: #616161;
+  font-family: 'Poppins', -apple-system, sans-serif;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 8px;
+  transition: color 0.3s ease;
+}
+
+.dismissButton:hover {
+  color: #3A3A3A;
+}
+
+@media (max-width: 768px) {
+  .modal {
+    padding: 32px 24px;
+  }
+
+  .waveIcon {
+    width: 64px;
+    height: 64px;
+  }
+
+  .modalTitle {
+    font-size: 1.5rem;
+  }
+
+  .modalText {
+    font-size: 1rem;
+  }
+
+  .newsletterPrompt p {
+    font-size: 0.9rem;
+  }
+
+  .continueButton {
+    font-size: 1rem;
+    padding: 14px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    padding: 24px 20px;
+  }
+
+  .waveIcon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .modalTitle {
+    font-size: 1.25rem;
+    margin-bottom: 16px;
+  }
+
+  .modalText {
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+  }
+
+  .newsletterPrompt {
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+
+  .newsletterPrompt p {
+    font-size: 0.85rem;
+  }
+
+  .continueButton {
+    font-size: 0.95rem;
+    padding: 12px 20px;
+  }
+}
