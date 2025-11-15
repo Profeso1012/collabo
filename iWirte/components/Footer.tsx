@@ -29,7 +29,7 @@ export default function Footer() {
         <div className={styles.column}>
           <h5>Blog</h5>
           <p>Personal insights and writing tips</p>
-          <Link href="/blog" className={styles.blogLink}>
+          <Link href="/blog-home" className={styles.blogLink}>
             Read the Blog →
           </Link>
         </div>
