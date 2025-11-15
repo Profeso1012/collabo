@@ -277,15 +277,16 @@ export default function EditorPage({ params }: { params: { id?: string[] } }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
+    <div className="min-h-screen py-12 px-4" style={{ backgroundColor: '#FAF3EA' }}>
       <div className="max-w-5xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-maroon">
+          <h1 className="text-4xl font-bold" style={{ color: '#B88E2F' }}>
             {blogId ? 'Edit Post' : 'Create New Post'}
           </h1>
           <button
             onClick={() => router.push('/admin')}
-            className="text-gray-600 hover:text-gray-800"
+            className="hover:opacity-80 transition-all font-semibold"
+            style={{ color: '#B88E2F' }}
           >
             Back to Dashboard
           </button>
@@ -293,41 +294,48 @@ export default function EditorPage({ params }: { params: { id?: string[] } }) {
 
         <div className="bg-white rounded-xl shadow-lg p-8 space-y-6">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold mb-2" style={{ color: '#B88E2F' }}>
               Title
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => handleTitleChange(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-maroon"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none"
               placeholder="Enter post title..."
+              style={{ '--tw-ring-color': '#B88E2F' } as React.CSSProperties}
+              onFocus={(e) => e.currentTarget.style.borderColor = '#B88E2F'}
+              onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold mb-2" style={{ color: '#B88E2F' }}>
               Slug (URL)
             </label>
             <input
               type="text"
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-maroon"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none"
               placeholder="post-url-slug"
+              onFocus={(e) => e.currentTarget.style.borderColor = '#B88E2F'}
+              onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold mb-2" style={{ color: '#B88E2F' }}>
               Excerpt
             </label>
             <textarea
               value={excerpt}
               onChange={(e) => setExcerpt(e.target.value)}
               rows={3}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-maroon resize-none"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none resize-none"
               placeholder="Brief description of the post..."
+              onFocus={(e) => e.currentTarget.style.borderColor = '#B88E2F'}
+              onBlur={(e) => e.currentTarget.style.borderColor = '#d1d5db'}
             />
           </div>
 
