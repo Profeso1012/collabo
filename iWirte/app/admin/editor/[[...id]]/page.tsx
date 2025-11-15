@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import EmojiPicker from 'emoji-picker-react';
+import ImageEditorModal from '@/components/ImageEditorModal';
 import 'react-quill/dist/quill.snow.css';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
@@ -18,7 +20,13 @@ export default function EditorPage({ params }: { params: { id?: string[] } }) {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [emojiPickerPosition, setEmojiPickerPosition] = useState({ top: 0, left: 0 });
+  const [imageEditorOpen, setImageEditorOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<HTMLImageElement | null>(null);
   const quillRef = useRef<any>(null);
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
+  const lastTapTime = useRef(0);
 
   useEffect(() => {
     if (blogId) {
@@ -97,7 +105,7 @@ export default function EditorPage({ params }: { params: { id?: string[] } }) {
     setSaving(true);
     try {
       const publishDate = publish ? new Date().toISOString() : null;
-      
+
       const response = await fetch('/api/admin/blogs', {
         method: blogId ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -114,7 +122,7 @@ export default function EditorPage({ params }: { params: { id?: string[] } }) {
 
       if (response.ok) {
         const data = await response.json();
-        
+
         // Only notify subscribers if publishing for the first time
         if (publish && publishDate) {
           await fetch('/api/admin/notify-subscribers', {
@@ -141,117 +149,130 @@ export default function EditorPage({ params }: { params: { id?: string[] } }) {
     }
   };
 
-  useEffect(() => {
-    if (quillRef.current) {
-      const editor = quillRef.current.getEditor();
-      const container = editor.root;
-      
-      let resizer: HTMLDivElement | null = null;
-      let currentImg: HTMLImageElement | null = null;
-      
-      const createResizer = (img: HTMLImageElement) => {
-        if (resizer) resizer.remove();
-        
-        resizer = document.createElement('div');
-        resizer.className = 'image-resizer';
-        resizer.style.cssText = `
-          position: absolute;
-          border: 2px solid #800020;
-          pointer-events: none;
-        `;
-        
-        const handles = ['nw', 'ne', 'sw', 'se', 'n', 's', 'e', 'w'];
-        handles.forEach(pos => {
-          const handle = document.createElement('div');
-          handle.className = `resize-handle resize-${pos}`;
-          handle.style.cssText = `
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #800020;
-            border: 2px solid white;
-            pointer-events: all;
-            cursor: ${pos.includes('n') || pos.includes('s') ? 'ns' : pos.includes('e') || pos.includes('w') ? 'ew' : 'nwse'}-resize;
-          `;
-          
-          if (pos.includes('n')) handle.style.top = '-5px';
-          if (pos.includes('s')) handle.style.bottom = '-5px';
-          if (pos.includes('e')) handle.style.right = '-5px';
-          if (pos.includes('w')) handle.style.left = '-5px';
-          if (!pos.includes('n') && !pos.includes('s')) handle.style.top = '50%';
-          if (!pos.includes('e') && !pos.includes('w')) handle.style.left = '50%';
-          
-          handle.addEventListener('mousedown', (e) => startResize(e, img, pos));
-          resizer!.appendChild(handle);
-        });
-        
-        container.appendChild(resizer);
-        updateResizerPosition(img);
-      };
-      
-      const updateResizerPosition = (img: HTMLImageElement) => {
-        if (!resizer) return;
-        const rect = img.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        resizer.style.left = `${rect.left - containerRect.left + container.scrollLeft}px`;
-        resizer.style.top = `${rect.top - containerRect.top + container.scrollTop}px`;
-        resizer.style.width = `${rect.width}px`;
-        resizer.style.height = `${rect.height}px`;
-      };
-      
-      const startResize = (e: MouseEvent, img: HTMLImageElement, handle: string) => {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const startX = e.clientX;
-        const startY = e.clientY;
-        const startWidth = img.offsetWidth;
-        const startHeight = img.offsetHeight;
-        const aspectRatio = startWidth / startHeight;
-        
-        const doResize = (e: MouseEvent) => {
-          let newWidth = startWidth;
-          let newHeight = startHeight;
-          
-          if (handle.includes('e')) newWidth = startWidth + (e.clientX - startX);
-          if (handle.includes('w')) newWidth = startWidth - (e.clientX - startX);
-          if (handle.includes('s')) newHeight = startHeight + (e.clientY - startY);
-          if (handle.includes('n')) newHeight = startHeight - (e.clientY - startY);
-          
-          if (handle.length === 1) {
-            if (handle === 'e' || handle === 'w') {
-              newHeight = newWidth / aspectRatio;
-            } else {
-              newWidth = newHeight * aspectRatio;
-            }
-          }
-          
-          img.style.width = `${Math.max(50, newWidth)}px`;
-          img.style.height = 'auto';
-          updateResizerPosition(img);
-        };
-        
-        const stopResize = () => {
-          document.removeEventListener('mousemove', doResize);
-          document.removeEventListener('mouseup', stopResize);
-        };
-        
-        document.addEventListener('mousemove', doResize);
-        document.addEventListener('mouseup', stopResize);
-      };
-      
-      container.addEventListener('click', (e: MouseEvent) => {
-        const target = e.target as HTMLElement;
-        if (target.tagName === 'IMG') {
-          currentImg = target as HTMLImageElement;
-          createResizer(currentImg);
-        } else if (!target.closest('.image-resizer')) {
-          if (resizer) resizer.remove();
-          currentImg = null;
+  const handleEmojiClick = (emojiObject: any) => {
+    const editor = quillRef.current?.getEditor();
+    if (editor) {
+      const selection = editor.getSelection();
+      if (selection) {
+        // Remove the '::' that triggered the emoji picker
+        const text = editor.getText();
+        if (selection.index >= 2 && text.substring(selection.index - 2, selection.index) === '::') {
+          editor.deleteText(selection.index - 2, 2);
+          editor.insertText(selection.index - 2, emojiObject.emoji);
         }
-      });
+      }
     }
-  }, [quillRef.current]);
+    setShowEmojiPicker(false);
+  };
+
+  // Setup editor with emoji detection and double-tap image handling
+  useEffect(() => {
+    const editor = quillRef.current?.getEditor();
+    if (!editor) return;
+
+    // Detect '::' for emoji picker
+    const handleTextChange = (delta: any, oldDelta: any, source: string) => {
+      if (source !== 'user') return;
+
+      const text = editor.getText();
+      const selection = editor.getSelection();
+
+      if (selection && selection.index >= 2) {
+        const lastChars = text.substring(selection.index - 2, selection.index);
+        if (lastChars === '::') {
+          const bounds = editor.getBounds(selection.index);
+          setEmojiPickerPosition({
+            top: bounds.bottom + 260,
+            left: Math.max(0, bounds.left - 100),
+          });
+          setShowEmojiPicker(true);
+        }
+      }
+    };
+
+    editor.on('text-change', handleTextChange);
+
+    // Setup double-tap for images
+    const editorContainer = editor.root;
+    const handleDblClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'IMG') {
+        setSelectedImage(target as HTMLImageElement);
+        setImageEditorOpen(true);
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'IMG') {
+        const now = Date.now();
+        if (now - lastTapTime.current < 300) {
+          // Double tap detected
+          setSelectedImage(target as HTMLImageElement);
+          setImageEditorOpen(true);
+        }
+        lastTapTime.current = now;
+      }
+    };
+
+    editorContainer.addEventListener('dblclick', handleDblClick);
+    editorContainer.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      editor.off('text-change', handleTextChange);
+      editorContainer.removeEventListener('dblclick', handleDblClick);
+      editorContainer.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, []);
+
+  const handleImageApply = (mode: 'size' | 'crop', params: any) => {
+    if (!selectedImage) return;
+
+    if (mode === 'size') {
+      if (params.width) {
+        selectedImage.style.width = `${params.width}px`;
+      }
+      if (params.height) {
+        selectedImage.style.height = `${params.height}px`;
+      }
+    } else if (mode === 'crop') {
+      const { top, right, bottom, left } = params;
+
+      if (top || right || bottom || left) {
+        const img = selectedImage;
+        const originalWidth = img.naturalWidth;
+        const originalHeight = img.naturalHeight;
+
+        const cropTop = (top / 100) * originalHeight;
+        const cropRight = (right / 100) * originalWidth;
+        const cropBottom = (bottom / 100) * originalHeight;
+        const cropLeft = (left / 100) * originalWidth;
+
+        const newWidth = originalWidth - cropLeft - cropRight;
+        const newHeight = originalHeight - cropTop - cropBottom;
+
+        // Store crop data as data attributes
+        img.dataset.cropTop = String(top);
+        img.dataset.cropRight = String(right);
+        img.dataset.cropBottom = String(bottom);
+        img.dataset.cropLeft = String(left);
+
+        // Apply crop using clip-path
+        const clipPath = `polygon(
+          ${(cropLeft / originalWidth) * 100}% ${(cropTop / originalHeight) * 100}%,
+          ${100 - (cropRight / originalWidth) * 100}% ${(cropTop / originalHeight) * 100}%,
+          ${100 - (cropRight / originalWidth) * 100}% ${100 - (cropBottom / originalHeight) * 100}%,
+          ${(cropLeft / originalWidth) * 100}% ${100 - (cropBottom / originalHeight) * 100}%
+        )`;
+
+        img.style.clipPath = clipPath;
+        img.style.width = `${newWidth * (originalWidth / (originalWidth - cropLeft - cropRight))}px`;
+        img.style.height = 'auto';
+      }
+    }
+
+    setImageEditorOpen(false);
+  };
 
   const modules = {
     toolbar: [
@@ -358,9 +379,9 @@ export default function EditorPage({ params }: { params: { id?: string[] } }) {
               </label>
               {featuredImage && (
                 <div className="flex-1">
-                  <img
-                    src={featuredImage}
-                    alt="Featured"
+                  <img 
+                    src={featuredImage} 
+                    alt="Featured" 
                     className="max-h-32 rounded-lg object-cover"
                   />
                 </div>
@@ -375,18 +396,34 @@ export default function EditorPage({ params }: { params: { id?: string[] } }) {
             <label className="block text-sm font-semibold mb-2" style={{ color: '#B88E2F' }}>
               Content
             </label>
-            <div className="rich-text-editor border rounded-lg relative" style={{ borderColor: '#B88E2F' }}>
-              <ReactQuill
-                ref={quillRef}
-                theme="snow"
-                value={content}
-                onChange={setContent}
-                modules={modules}
-                placeholder="Write your blog post content here..."
-              />
+            <div style={{ position: 'relative' }}>
+              <div className="rich-text-editor border rounded-lg relative" style={{ borderColor: '#B88E2F' }}>
+                <ReactQuill
+                  ref={quillRef}
+                  theme="snow"
+                  value={content}
+                  onChange={setContent}
+                  modules={modules}
+                  placeholder="Write your blog post content here... (Type :: to insert emoji, double-tap images to resize/crop)"
+                />
+              </div>
+
+              {showEmojiPicker && (
+                <div
+                  ref={emojiPickerRef}
+                  style={{
+                    position: 'absolute',
+                    top: `${emojiPickerPosition.top}px`,
+                    left: `${emojiPickerPosition.left}px`,
+                    zIndex: 1000,
+                  }}
+                >
+                  <EmojiPicker onEmojiClick={handleEmojiClick} />
+                </div>
+              )}
             </div>
             <p className="text-sm mt-2" style={{ color: '#B88E2F' }}>
-              💡 Tip: Click on an image to select it, then drag the corner to resize
+              💡 Tips: Type <strong>::</strong> to insert emoji • Double-tap images to resize or crop
             </p>
           </div>
 
@@ -414,6 +451,14 @@ export default function EditorPage({ params }: { params: { id?: string[] } }) {
           </div>
         </div>
       </div>
+
+      <ImageEditorModal
+        isOpen={imageEditorOpen}
+        imageSrc={selectedImage?.src || ''}
+        imageElement={selectedImage}
+        onClose={() => setImageEditorOpen(false)}
+        onApply={handleImageApply}
+      />
     </div>
   );
 }
