@@ -12,14 +12,14 @@
   border: 2px solid transparent;
   border-radius: 8px;
   margin-bottom: 24px;
-  color: var(--maroon);
-  background: var(--off-white);
+  color: #B88E2F;
+  background: #FAF3EA;
   transition: border-color 0.3s ease;
 }
 
 .titleInput:focus {
   outline: none;
-  border-color: var(--gold);
+  border-color: #B88E2F;
   background: white;
 }
 
