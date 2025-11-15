@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import EmojiPicker from 'emoji-picker-react';
@@ -14,6 +14,7 @@ const modules = {
     [{ 'list': 'ordered'}, { 'list': 'bullet' }],
     [{ 'color': [] }, { 'background': [] }],
     ['link', 'image', 'video'],
+    ['emoji'],
     ['clean']
   ],
 };
@@ -30,13 +31,51 @@ export default function EditorComponent() {
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [emojiPickerPosition, setEmojiPickerPosition] = useState({ top: 0, left: 0 });
   const editorRef = useRef<any>(null);
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const editor = editorRef.current?.getEditor();
+    if (!editor) return;
+
+    const handleBeforeChange = (delta: any, oldDelta: any, source: string) => {
+      if (source !== 'user') return;
+
+      // Check for :: pattern for emoji trigger
+      const text = editor.getText();
+      const selection = editor.getSelection();
+      if (selection && selection.index >= 2) {
+        const lastChars = text.substring(selection.index - 2, selection.index);
+        if (lastChars === '::') {
+          // Show emoji picker
+          const bounds = editor.getBounds(selection.index);
+          setEmojiPickerPosition({
+            top: bounds.bottom + 10,
+            left: bounds.left,
+          });
+          setShowEmojiPicker(true);
+        }
+      }
+    };
+
+    const quill = editor;
+    quill.on('text-change', handleBeforeChange);
+
+    return () => {
+      quill.off('text-change', handleBeforeChange);
+    };
+  }, []);
 
   const handleEmojiClick = (emojiObject: any) => {
     const editor = editorRef.current?.getEditor();
     if (editor) {
       const selection = editor.getSelection();
-      editor.insertText(selection?.index || 0, emojiObject.emoji);
+      if (selection) {
+        // Remove the '::' that triggered the emoji picker
+        editor.deleteText(selection.index - 2, 2);
+        editor.insertText(selection.index - 2, emojiObject.emoji);
+      }
     }
     setShowEmojiPicker(false);
   };
