@@ -24,14 +24,14 @@ export async function POST(request: NextRequest) {
     // Create unique filename
     const timestamp = Date.now();
     const fileExt = file.name.split('.').pop()?.toLowerCase() || 'png';
-    const fileName = `blog-images/${timestamp}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+    const fileName = `${timestamp}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
     // Convert file to buffer
     const buffer = await file.arrayBuffer();
 
     // Upload to Supabase storage
     const { data, error } = await supabaseAdmin.storage
-      .from('blog-images')
+      .from('pictures')
       .upload(fileName, buffer, {
         contentType: file.type,
         upsert: false,
