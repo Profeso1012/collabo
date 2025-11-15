@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase';
 import { format } from 'date-fns';
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
+import Link from 'next/link';
 import BlogNavbar from '@/components/BlogNavbar';
 import BlogFooter from '@/components/BlogFooter';
 import BlogReactions from '@/components/BlogReactions';
@@ -36,35 +36,53 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   return (
     <>
       <BlogNavbar />
-      <div className={styles.article}>
-        <WelcomeModal blogId={blog.id} />
-        <article className={styles.container}>
-          <header className={styles.articleHeader}>
-            <div className={styles.publishDate}>
-              {format(new Date(blog.published_at), 'MMMM dd, yyyy')}
-            </div>
-            <h1 className={styles.articleTitle}>
-              {blog.title}
-            </h1>
-            {blog.featured_image && (
-              <div className={styles.featuredImage}>
-                <Image
-                  src={blog.featured_image}
-                  alt={blog.title}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                />
-              </div>
-            )}
-          </header>
+      <WelcomeModal blogId={blog.id} />
+      
+      {/* Hero Section with Cover Image */}
+      <section className={styles.hero}>
+        <div className={styles.heroImageWrapper}>
+          <img 
+            src={blog.featured_image || 'https://api.builder.io/api/v1/image/assets/TEMP/9e49dcaf5e4e4432d24340132ccef5037868fd5b?width=2880'} 
+            alt={blog.title}
+            className={styles.heroImage}
+          />
+        </div>
+        <div className={styles.heroContent}>
+          <h1 className={styles.heroTitle}>{blog.title}</h1>
+          <div className={styles.breadcrumb}>
+            <Link href="/blog-home" className={styles.breadcrumbLink}>Home</Link>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M6 15L11 10L6 5L7 3L14 10L7 17L6 15Z" fill="black"/>
+            </svg>
+            <Link href="/blog" className={styles.breadcrumbLink}>Blog</Link>
+          </div>
+        </div>
+      </section>
 
+      {/* Description Section */}
+      {blog.excerpt && (
+        <section className={styles.descriptionSection}>
+          <div className={styles.descriptionContent}>
+            <p>{blog.excerpt}</p>
+          </div>
+        </section>
+      )}
+
+      {/* Main Article Content */}
+      <div className={styles.article}>
+        <article className={styles.container}>
           <div
             className={styles.richTextContent}
             dangerouslySetInnerHTML={{ __html: blog.content }}
           />
 
           <div className={styles.reactionsSection}>
-            <BlogReactions blogId={blog.id} initialLikes={blog.likes} initialLoves={blog.loves} initialDislikes={blog.dislikes} />
+            <BlogReactions 
+              blogId={blog.id} 
+              initialLikes={blog.likes || 0} 
+              initialLoves={blog.loves || 0} 
+              initialDislikes={blog.dislikes || 0} 
+            />
           </div>
         </article>
 
@@ -74,6 +92,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           </div>
         </section>
       </div>
+      
       <BlogFooter />
     </>
   );
