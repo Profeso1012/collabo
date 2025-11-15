@@ -1,0 +1,140 @@
+.header {
+  width: 100%;
+  height: 125px;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.container {
+  width: 100%;
+  max-width: 1440px;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logoImage {
+  border-radius: 200px;
+  border: 3px solid #000;
+  object-fit: contain;
+}
+
+.nav {
+  display: flex;
+  gap: 104px;
+  align-items: center;
+}
+
+.navLink {
+  color: #000;
+  font-family: 'Poppins', -apple-system, sans-serif;
+  font-size: 28px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.navLink:hover,
+.navLink.active {
+  font-weight: 600;
+  transform: scale(1.05);
+}
+
+.navLink:hover::after,
+.navLink.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #B88E2F;
+}
+
+.headerIcons {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.headerIcons svg {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.headerIcons svg:hover {
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .header {
+    height: 80px;
+  }
+
+  .container {
+    padding: 0 20px;
+  }
+
+  .logoImage {
+    width: 120px;
+    height: 50px;
+  }
+
+  .nav {
+    gap: 40px;
+  }
+
+  .navLink {
+    font-size: 20px;
+  }
+
+  .headerIcons {
+    gap: 16px;
+  }
+
+  .headerIcons svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    height: 70px;
+  }
+
+  .container {
+    padding: 0 16px;
+  }
+
+  .logoImage {
+    width: 100px;
+    height: 42px;
+  }
+
+  .nav {
+    gap: 24px;
+  }
+
+  .navLink {
+    font-size: 16px;
+  }
+
+  .headerIcons svg {
+    width: 18px;
+    height: 18px;
+  }
+}
