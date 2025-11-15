@@ -56,14 +56,14 @@
 }
 
 .createButton {
-  background: var(--maroon);
+  background: #B88E2F;
   color: white;
 }
 
 .createButton:hover {
-  background: #6B2A2A;
+  background: #a57c25;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(139, 58, 58, 0.2);
+  box-shadow: 0 4px 12px rgba(184, 142, 47, 0.2);
 }
 
 .logoutButton {
