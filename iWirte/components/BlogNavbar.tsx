@@ -15,8 +15,8 @@ export default function BlogNavbar() {
           <Image 
             src="/image.png" 
             alt="iWrite Blog Logo" 
-            width={205} 
-            height={60}
+            width={145} 
+            height={40}
             className={styles.logoImage}
           />
         </Link>
