@@ -205,6 +205,7 @@
   text-decoration: none;
   align-self: flex-start;
   transition: all 0.3s ease;
+  border-radius: 4px;
 }
 
 .viewMoreBtn:hover {
@@ -212,41 +213,52 @@
   transform: translateY(-2px);
 }
 
-.carouselContainer {
-  position: relative;
-  overflow: hidden;
+/* Carousel Styles */
+.carouselWrapper {
   width: 100%;
+  max-width: 1196px;
 }
 
-.carousel {
+.carouselContainer {
   display: flex;
   gap: 24px;
-  transition: transform 0.5s ease;
+  position: relative;
+  overflow: visible;
 }
 
-.carouselItem {
-  flex: 0 0 calc(33.33% - 16px);
+.carouselSlide {
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carouselSlide:not(.activeSlide) {
+  width: 372px;
+}
+
+.activeSlide {
+  width: 404px;
+}
+
+.carouselImageWrapper {
   position: relative;
   overflow: hidden;
+  border-radius: 4px;
 }
 
-.carouselItem.active {
-  flex: 0 0 404px;
+.carouselSlide:not(.activeSlide) .carouselImageWrapper {
+  height: 486px;
 }
 
-.carouselItem:not(.active) {
-  flex: 0 0 372px;
-}
-
-.carouselItem img {
-  width: 100%;
+.activeSlide .carouselImageWrapper {
   height: 582px;
+}
+
+.carouselImage {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   display: block;
-}
-
-.carouselItem:not(.active) img {
-  height: 486px;
 }
 
 .carouselOverlay {
@@ -260,17 +272,23 @@
   border-radius: 4px;
 }
 
-.carouselMeta {
+.overlayContent {
+  position: relative;
+}
+
+.postMeta {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 8px;
 }
 
-.carouselMeta span {
+.postNumber,
+.postDate {
   font-family: 'Poppins', -apple-system, sans-serif;
   font-size: 16px;
   font-weight: 500;
+  line-height: 1.5;
   color: #616161;
 }
 
@@ -280,16 +298,18 @@
   background: #616161;
 }
 
-.carouselOverlay h3 {
+.postTitle {
   font-family: 'Poppins', -apple-system, sans-serif;
   font-size: 25px;
   font-weight: 600;
   line-height: 1.2;
   color: #3A3A3A;
   margin: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
-.carouselArrow {
+.readMoreArrow {
   position: absolute;
   bottom: 32px;
   right: 32px;
@@ -301,10 +321,12 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
+  text-decoration: none;
 }
 
-.carouselArrow:hover {
+.readMoreArrow:hover {
   background: #9a7628;
+  transform: scale(1.05);
 }
 
 .carouselControls {
@@ -312,11 +334,10 @@
   align-items: center;
   gap: 40px;
   margin-top: 40px;
-  justify-content: flex-start;
   padding-left: 428px;
 }
 
-.carouselPrev {
+.nextButton {
   width: 48px;
   height: 48px;
   background: #fff;
@@ -328,14 +349,12 @@
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
-.carouselPrev:hover {
+.nextButton:hover {
   transform: scale(1.05);
-}
-
-.carouselPrev svg {
-  transform: rotate(180deg);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
 .carouselIndicators {
@@ -353,24 +372,34 @@
   cursor: pointer;
   transition: all 0.3s ease;
   padding: 0;
+  flex-shrink: 0;
 }
 
-.indicator.activeIndicator {
+.indicator:hover {
+  background: #bbb;
+}
+
+.activeIndicator {
   width: 27px;
   height: 27px;
-  background: #B88E2F;
+  background: #fff;
   border: 1px solid #B88E2F;
   position: relative;
 }
 
-.indicator.activeIndicator::before {
+.activeIndicator::before {
   content: '';
   position: absolute;
-  inset: 6px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
   background: #B88E2F;
 }
 
+/* Responsive Styles */
 @media (max-width: 1400px) {
   .latestPostsContent {
     grid-template-columns: 1fr;
@@ -398,20 +427,32 @@
     max-width: 400px;
   }
 
-  .carousel {
+  .carouselContainer {
     gap: 16px;
   }
 
-  .carouselItem {
-    flex: 0 0 calc(50% - 8px) !important;
+  .carouselSlide:not(.activeSlide) {
+    width: 280px;
   }
 
-  .carouselItem.active {
-    flex: 0 0 calc(50% - 8px) !important;
+  .activeSlide {
+    width: 320px;
   }
 
-  .carouselItem img {
-    height: 400px !important;
+  .carouselSlide:not(.activeSlide) .carouselImageWrapper {
+    height: 380px;
+  }
+
+  .activeSlide .carouselImageWrapper {
+    height: 460px;
+  }
+
+  .carouselOverlay {
+    padding: 24px;
+  }
+
+  .postTitle {
+    font-size: 20px;
   }
 }
 
@@ -482,25 +523,32 @@
     font-size: 14px;
   }
 
-  .carousel {
+  .carouselContainer {
     gap: 12px;
+    justify-content: center;
   }
 
-  .carouselItem {
-    flex: 0 0 100% !important;
+  .carouselSlide {
+    display: none;
   }
 
-  .carouselItem.active {
-    flex: 0 0 100% !important;
+  .activeSlide {
+    display: block;
+    width: 100%;
+    max-width: 404px;
   }
 
-  .carouselItem img {
-    height: 500px !important;
+  .activeSlide .carouselImageWrapper {
+    height: 520px;
   }
 
   .carouselControls {
     margin-top: 24px;
     gap: 24px;
+  }
+
+  .postTitle {
+    font-size: 22px;
   }
 }
 
@@ -532,15 +580,39 @@
     font-size: 24px;
   }
 
-  .carouselItem img {
-    height: 400px !important;
+  .activeSlide .carouselImageWrapper {
+    height: 440px;
   }
 
   .carouselOverlay {
     padding: 20px;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
   }
 
-  .carouselOverlay h3 {
-    font-size: 20px;
+  .postTitle {
+    font-size: 18px;
+  }
+
+  .postMeta {
+    font-size: 14px;
+  }
+
+  .postNumber,
+  .postDate {
+    font-size: 14px;
+  }
+
+  .readMoreArrow {
+    width: 40px;
+    height: 40px;
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .readMoreArrow svg {
+    width: 20px;
+    height: 20px;
   }
 }
