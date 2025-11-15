@@ -168,10 +168,10 @@ export default function EditorComponent() {
       />
 
       <div className={styles.toolbarExtras}>
-        <button 
+        <button
           onClick={() => setShowEmojiPicker(!showEmojiPicker)}
           className={styles.emojiBtn}
-          title="Add emoji"
+          title="Add emoji (or type :: in editor)"
         >
           😊
         </button>
@@ -182,7 +182,16 @@ export default function EditorComponent() {
       </div>
 
       {showEmojiPicker && (
-        <div className={styles.emojiPickerContainer}>
+        <div
+          ref={emojiPickerRef}
+          className={styles.emojiPickerContainer}
+          style={{
+            position: 'absolute',
+            top: `${emojiPickerPosition.top}px`,
+            left: `${emojiPickerPosition.left}px`,
+            zIndex: 1000,
+          }}
+        >
           <EmojiPicker onEmojiClick={handleEmojiClick} />
         </div>
       )}
@@ -194,7 +203,7 @@ export default function EditorComponent() {
         modules={modules}
         formats={formats}
         theme="snow"
-        placeholder="Start writing your blog post..."
+        placeholder="Start writing your blog post... (Type :: to insert emoji)"
         className={styles.quill}
       />
 
