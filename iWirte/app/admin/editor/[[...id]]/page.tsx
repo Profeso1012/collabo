@@ -333,15 +333,34 @@ export default function EditorPage({ params }: { params: { id?: string[] } }) {
 
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Featured Image URL (Optional)
+              Featured Image (Optional)
             </label>
-            <input
-              type="url"
-              value={featuredImage}
-              onChange={(e) => setFeaturedImage(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-maroon"
-              placeholder="https://picsum.photos/800/400"
-            />
+            <div className="flex items-center gap-4">
+              <label className="flex-1 px-4 py-3 rounded-lg border border-gray-300 cursor-pointer hover:bg-gray-50 transition-all">
+                <span className="text-gray-600">
+                  {uploadingImage ? 'Uploading...' : 'Choose Image'}
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFeaturedImageUpload}
+                  disabled={uploadingImage}
+                  className="hidden"
+                />
+              </label>
+              {featuredImage && (
+                <div className="flex-1">
+                  <img
+                    src={featuredImage}
+                    alt="Featured"
+                    className="max-h-32 rounded-lg object-cover"
+                  />
+                </div>
+              )}
+            </div>
+            {featuredImage && (
+              <p className="text-xs text-gray-500 mt-2">Image uploaded successfully</p>
+            )}
           </div>
 
           <div>
